@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>資安班照片展示</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .terminal {
+      white-space: pre-wrap;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    #input-line {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #prompt {
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+
+    input {
+      background: black;
+      color: #00ff00;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 1em;
+      flex: 1;
+    }
+
+    .ascii {
+      color: #00ff00;
+      font-weight: bold;
+      margin-bottom: 20px;
+      white-space: pre;
+    }
+
+    .back-hint {
+      margin-top: 10px;
+    }
+
+    .event-block {
+      border: 1px solid #00ff00;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      max-width: 600px;
+      /* 可視需要調整寬度 */
+    }
+
+    .event-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      color: #00ff00;
+      text-align: center;
+    }
+
+    .photo-pair {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .photo-pair img {
+      max-height: 180px;
+      border: 2px solid #00ff00;
+      border-radius: 5px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      width: 45%; /* 兩張平均分 */
+    }
+    .photo-pair img:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal" id="output">
+資安班照片展示系統
+
+----------------------------
+
+   ███████╗ ██╗  ██╗ ███████╗ ██╗  ██╗
+   ██╔════╝ ██║  ██║ ██╔════╝ ██║  ██║
+   █████╗   ███████║ ███████╗ ███████║
+   ██╔══╝   ██╔══██║ ╚════██║ ██╔══██║
+   ██║      ██║  ██║ ███████║ ██║  ██║
+   ╚═╝      ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝
+
+顯示中：我們資安班的日常生活與活動紀錄...
+在下方指令輸入back可以返回
+
+
+[1] 無人機體驗
+[2] 國際交流
+[3] 自主學習發表會
+[4] 參觀國防管理學院
+[5] 黑克松...
+
+</div>
+
+<!-- 五個活動框框 -->
+<div class="event-block">
+  <div class="event-title">無人機體驗</div>
+  <div class="photo-pair">
+    <img src="螢幕擷取畫面 2025-06-01 205846.png" alt="無人機體驗1" />
+    <img src="螢幕擷取畫面 2025-06-01 210048.png" alt="無人機體驗2" />
+  </div>
+</div>
+
+<div class="event-block">
+  <div class="event-title">國際交流</div>
+  <div class="photo-pair">
+    <img src="螢幕擷取畫面 2025-06-01 210057.png" alt="國際交流1" />
+    <img src="螢幕擷取畫面 2025-06-01 210103.png" alt="國際交流2" />
+  </div>
+</div>
+
+<div class="event-block">
+  <div class="event-title">參觀國防管理學院</div>
+  <div class="photo-pair">
+    <img src="螢幕擷取畫面 2025-06-01 210313.png" alt="國防管理學院1" />
+    <img src="螢幕擷取畫面 2025-06-01 210318.png" alt="國防管理學院2" />
+  </div>
+</div>
+
+<div class="event-block">
+  <div class="event-title">黑克松...</div>
+  <div class="photo-pair">
+    <img src="螢幕擷取畫面 2025-06-01 211631.png" alt="黑克松1" />
+    <img src="螢幕擷取畫面 2025-06-01 211637.png" alt="黑克松2" />
+  </div>
+</div>
+
+
+<div id="input-line">
+  <span id="prompt">photos@terminal:~$</span>
+  <input id="commandInput" autofocus autocomplete="off" />
+</div>
+
+<script>
+  const input = document.getElementById("commandInput");
+  const output = document.getElementById("output");
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      const command = input.value.trim().toLowerCase();
+      output.innerHTML += `\nphotos@terminal:~$ ${command}`;
+      handleCommand(command);
+      input.value = "";
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  });
+
+  function handleCommand(cmd) {
+    if (cmd === "back") {
+      output.innerHTML += `\n正在返回主終端機...`;
+      setTimeout(() => {
+        window.location.href = "terminal.html";
+      }, 1000);
+    } else {
+      output.innerHTML += `\n未知指令：${cmd}`;
+    }
+  }
+</script>
+</body>
+</html>

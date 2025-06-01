@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>駭客世界</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+        }
+
+        #welcome-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            position: relative;
+            z-index: 1; /* 確保內容在矩陣動畫之上 */
+        }
+
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 讓鼠標事件穿透到下層 */
+            z-index: 0; /* 確保矩陣動畫在最下層 */
+        }
+
+        .matrix-bg canvas {
+            display: block;
+        }
+
+        #welcome-screen h1 {
+            color: #00ff00;
+            font-family: 'Press Start 2P', cursive; /* 類似駭客風格的字體 */
+            font-size: 3em;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.6); /* 調整文字陰影 */
+            margin-bottom: 30px;
+            z-index: 1;
+            position: relative;
+        }
+
+        #welcome-screen input[type="text"] {
+            background: rgba(0, 255, 0, 0.08); /* 更透明 */
+            border: 2px solid #00cc00; /* 稍微暗一點的邊框 */
+            padding: 10px 20px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); /* 新增陰影 */
+        }
+
+        #welcome-screen button {
+            background: #00cc00; /* 稍微暗一點的綠色 */
+            color: black;
+            border: none;
+            padding: 10px 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1;
+            position: relative;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); /* 新增陰影 */
+        }
+
+        #welcome-screen button:hover {
+            background: #009900; /* 懸停時更暗 */
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8); /* 懸停時陰影更明顯 */
+        }
+
+        #welcome-screen .cyber-text {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin-top: 40px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        #welcome-screen .cyber-text a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        #welcome-screen .cyber-text a:hover {
+            color: #00dddd;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="matrix-bg">
+            <canvas id="matrixCanvas"></canvas>
+        </div>
+        <h1>Who are you?</h1>
+        <input type="text" id="nameInput" placeholder="Type your name">
+        <button id="enterButton">Enter</button>
+        <p class="cyber-text">interesting about cyber security? <a href="#">join us!</a></p>
+    </div>
+
+    <script>
+        const nameInput = document.getElementById('nameInput');
+        const enterButton = document.getElementById('enterButton');
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const ctx = matrixCanvas.getContext('2d');
+
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+
+        const characters = '01';
+        const fontSize = 16;
+        const columns = matrixCanvas.width / fontSize;
+
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            // 更低的透明度，讓背景更暗更透明
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.03)'; // 調整為 0.03，更透明
+            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+            // 繪製 0 和 1 的顏色也稍微調暗
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.6)'; // 調整為 0.6，更暗更透明
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.98) { // 稍微降低重置頻率
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        let matrixInterval = setInterval(drawMatrix, 50); // 稍微慢一點的動畫 (20 FPS)，減少顯眼度
+
+        window.addEventListener('resize', () => {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            const newColumns = matrixCanvas.width / fontSize;
+            drops.length = newColumns;
+            for (let i = 0; i < newColumns; i++) {
+                if (drops[i] === undefined) {
+                    drops[i] = 1;
+                }
+            }
+        });
+
+        enterButton.addEventListener('click', () => {
+            const userName = encodeURIComponent(nameInput.value.trim());
+            if (userName) {
+                clearInterval(matrixInterval);
+                window.location.href = `read.html?name=${userName}`;
+            } else {
+                alert('請輸入您的名字！');
+            }
+        });
+
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                enterButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Continue</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .terminal {
+      flex: 1;
+      white-space: pre-wrap;
+    }
+
+    .image-area {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-area img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+    }
+
+    .prompt {
+      color: #00ff00;
+      font-weight: bold;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .input-line input {
+      background: black;
+      color: #00ff00;
+      border: none;
+      font-family: inherit;
+      font-size: 1em;
+      outline: none;
+      width: 100%;
+    }
+
+    .esc-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      color: #00ff00;
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div id="content"></div>
+    <br/>
+    <div class="input-line">
+      <span class="prompt">user@h4ck3r:~$&nbsp;</span>
+      <input type="text" id="commandInput" autocomplete="off" autofocus />
+    </div>
+  </div>
+
+  <div class="image-area">
+    <img src="https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1719386225646.jpg" alt="continue meme">
+  </div>
+
+  <div class="esc-hint">輸入help查看指令</div>
+
+  <script>
+    const contentText = `來到資安班你可以切身體驗何為充實。
+我們有的是活動可以參加，不怕你太閒，只怕你太忙!
+
+AI資安學程是一個分散式學習的資安專班，學習過程強調「學中做、做中學」及「自主學習」，
+這裡聚集了許多志同道合的夥伴，不論是技術交流還是組隊競賽都能找到
+劈腿只有零次跟無數次，網站攻擊也只有零次跟無數次！！
+
+快來加入我們這個大家庭 ，一起體驗資安的樂趣！`;
+
+    const contentDiv = document.getElementById('content');
+    const input = document.getElementById('commandInput');
+
+    const files = {
+      "資安班.txt": {
+        content: "這是資安班的檔案內容。\n系統將自動跳轉頁面...",
+        redirectTo: "terminal2.html"
+      },
+      "flag.txt": {
+        content: "這都被你發現了嗎.....",
+        redirectTo: "flag1.html"
+      },
+      "ourphotos": {
+        content: "這是我們資安班的精彩照片！即將跳轉...",
+        redirectTo: "photos.html"
+      }
+    };
+
+    let index = 0;
+
+    function typeNextChar() {
+      if (index < contentText.length) {
+        contentDiv.textContent += contentText[index++];
+        setTimeout(typeNextChar, 20);
+      }
+    }
+
+    typeNextChar();
+
+    input.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const cmd = input.value.trim().toLowerCase();
+        contentDiv.innerHTML += `\nuser@h4ck3r:~$ ${cmd}`;
+        handleCommand(cmd);
+        input.value = '';
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    });
+
+    function handleCommand(cmd) {
+      if (cmd === 'help') {
+        contentDiv.innerHTML += `
+cat <檔名>     ：查看檔案內容
+ls             ：列出所有目錄
+scan           ：模擬系統掃描
+clear          ：清除畫面
+exit           ：離開模擬器
+back           ：返回上一頁`;
+      } else if (cmd === 'ls') {
+        contentDiv.innerHTML += `\n資安班.txt\nflag.txt\nourphotos`;
+      } else if (cmd.startsWith("cat ")) {
+        const file = cmd.slice(4);
+        if (files[file]) {
+          contentDiv.innerHTML += `\n${files[file].content}`;
+          if (files[file].redirectTo) {
+            setTimeout(() => {
+              window.location.href = files[file].redirectTo;
+            }, 1000);
+          }
+        } else {
+          contentDiv.innerHTML += `\n找不到檔案：${file}`;
+        }
+      } else if (cmd === 'scan') {
+        runScanAnimation();
+      } else if (cmd === 'clear') {
+        contentDiv.innerHTML = '';
+      } else if (cmd === 'exit') {
+        contentDiv.innerHTML += `\n再見！`;
+        input.disabled = true;
+      } else if (cmd === 'back') {
+        contentDiv.innerHTML += `\n返回上一頁中...`;
+        setTimeout(() => {
+          window.location.href = 'terminal.html';
+        }, 1000);
+      } else if (cmd === 'continue') {
+        contentDiv.innerHTML += `\n繼續前往下一頁...`;
+        setTimeout(() => {
+          window.location.href = 'next.html';
+        }, 1000);
+      } else {
+        contentDiv.innerHTML += `\n未知指令：${cmd}`;
+      }
+    }
+
+    function runScanAnimation() {
+      const scanLines = [
+        "啟動掃描程式...",
+        "掃描中 [▓░░░░░░░░░] 10%",
+        "掃描中 [▓▓▓░░░░░░░░] 30%",
+        "掃描中 [▓▓▓▓▓░░░░░░] 50%",
+        "掃描中 [▓▓▓▓▓▓▓░░░░] 70%",
+        "掃描中 [▓▓▓▓▓▓▓▓▓░░] 90%",
+        "掃描中 [▓▓▓▓▓▓▓▓▓▓▓] 100%",
+        "掃描完成！",
+        "找到目標 IP：10.0.0.1",
+        "開放端口：22 (SSH)、80 (HTTP)、443 (HTTPS)"
+      ];
+
+      let i = 0;
+      function printLine() {
+        if (i < scanLines.length) {
+          contentDiv.innerHTML += `\n${scanLines[i++]}`;
+          setTimeout(printLine, 700);
+        }
+      }
+      printLine();
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        history.back();
+      }
+    });
+  </script>
+</body>
+</html>

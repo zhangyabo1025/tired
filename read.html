@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>終端機使用手冊</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      padding: 30px;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #00cc00;
+    }
+    pre {
+      background-color: #222;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    button {
+      background-color: #00cc00;
+      color: black;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #009900;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>終端機使用手冊</h1>
+  <p>歡迎使用資安班的終端機展示系統。以下是常用指令說明及操作範例，請參考：</p>
+
+  <h2>常用指令</h2>
+  <ul>
+    <li><code>back</code>：返回主終端機畫面。</li>
+    <li><code>help</code>：顯示指令列表。</li>
+    <li><code>clear</code>：清除終端機顯示內容。</li>
+    <li><code>ls</code>：顯示所有資料</li>
+    <li><code>cat 檔名</code> ：在輸入框輸入「cat」＋空白鍵一個＋「檔案名稱」，就可以察看檔案裡面的內容</li>
+    <li><code>clear</code>：清除終端機顯示內容（目前尚未實作）。</li>
+    
+  </ul>
+
+  <h2>操作範例</h2>
+  <pre>
+photos@terminal:~$ back
+正在返回主終端機...
+  </pre>
+
+  <h2>注意事項</h2>
+  <ul>
+    <li>請在指令列輸入指令後按 Enter 鍵執行。</li>
+    <li>目前僅支援部分指令，更多功能持續開發中。</li>
+  </ul>
+
+  <button id="enterTerminalBtn">閱讀完畢，進入終端機</button>
+
+  <script>
+    document.getElementById('enterTerminalBtn').addEventListener('click', () => {
+      window.location.href = 'terminal.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>資安班模擬終端機</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+      margin: 0;
+    }
+
+    #title {
+      font-size: 1.6em;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: left;
+      color: #00ff00;
+      text-shadow:
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    }
+
+    #terminal {
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    #input-line {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #prompt {
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+
+    input {
+      background: black;
+      color: #00ff00;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 1em;
+      flex: 1;
+    }
+
+    #normal-text {
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+
+    #instruction {
+      font-size: 1em;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <div id="title">看過這麼瘋的資安班嗎？</div>
+    <div id="normal-text">沒有正常的學姐，只有一起搞gay的學姐；沒有正常的學長，只有會在路上亂叫的狗</div>
+    <div id="instruction">請繼續輸入下一個指令，開啟你的旅程——&gt; <b>continue</b></div>
+
+    <div id="input-line">
+      <span id="prompt">user@zianban:~$</span>
+      <input id="commandInput" autofocus />
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById("commandInput");
+    const prompt = document.getElementById("prompt");
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const command = input.value.trim().toLowerCase();
+        if (command === "continue") {
+          // 這裡跳轉到下一個頁面，你可以自行改成想要的路徑
+          window.location.href = "continue.html";
+        } else {
+          alert("未知指令：" + command);
+          input.value = "";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
