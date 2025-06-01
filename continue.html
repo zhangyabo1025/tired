@@ -163,11 +163,7 @@ back           ：返回上一頁`;
         setTimeout(() => {
           window.location.href = 'terminal.html';
         }, 1000);
-      } else if (cmd === 'continue') {
-        contentDiv.innerHTML += `\n繼續前往下一頁...`;
-        setTimeout(() => {
-          window.location.href = 'next.html';
-        }, 1000);
+      
       } else {
         contentDiv.innerHTML += `\n未知指令：${cmd}`;
       }
