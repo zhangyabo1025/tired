@@ -26,7 +26,7 @@
       justify-content: center;
       align-items: center;
     }
-
+    
     .image-area img {
       max-width: 90%;
       max-height: 90%;
@@ -76,11 +76,12 @@
   <div class="image-area">
     <img src="https://memeprod.sgp1.digitaloceanspaces.com/user-wtf/1719386225646.jpg" alt="continue meme">
   </div>
+  
 
   <div class="esc-hint">輸入help查看指令</div>
 
   <script>
-    const contentText = `來到資安班你可以切身體驗何為充實。
+  const contentText = `來到資安班你可以切身體驗何為充實。
 我們有的是活動可以參加，不怕你太閒，只怕你太忙!
 
 AI資安學程是一個分散式學習的資安專班，學習過程強調「學中做、做中學」及「自主學習」，
@@ -89,115 +90,175 @@ AI資安學程是一個分散式學習的資安專班，學習過程強調「學
 
 快來加入我們這個大家庭 ，一起體驗資安的樂趣！`;
 
-    const contentDiv = document.getElementById('content');
-    const input = document.getElementById('commandInput');
+  const contentDiv = document.getElementById('content');
+  const input = document.getElementById('commandInput');
 
-    const files = {
-      "資安班.txt": {
-        content: "這是資安班的檔案內容。\n系統將自動跳轉頁面...",
-        redirectTo: "terminal2.html"
-      },
-      "flag.txt": {
-        content: "這都被你發現了嗎.....",
-        redirectTo: "flag1.html"
-      },
-      "ourphotos": {
-        content: "這是我們資安班的精彩照片！即將跳轉...",
-        redirectTo: "photos.html"
-      }
-    };
-
-    let index = 0;
-
-    function typeNextChar() {
-      if (index < contentText.length) {
-        contentDiv.textContent += contentText[index++];
-        setTimeout(typeNextChar, 20);
-      }
+  const files = {
+    "資安班.txt": {
+      content: "這是資安班的檔案內容。\n系統將自動跳轉頁面...",
+      redirectTo: "terminal2.html"
+    },
+    "flag.txt": {
+      content: "這都被你發現了嗎.....",
+      redirectTo: "flag1.html"
+    },
+    "ourphotos": {
+      content: "這是我們資安班的精彩照片！即將跳轉...",
+      redirectTo: "photos.html"
     }
+  };
 
-    typeNextChar();
+  const hackerQuotes = [
+    "「入侵成功不代表你安全，只代表對方更不安全。」",
+    "「社交工程比你想像的還好用。」",
+    "「0day 就像愛情，難尋又短暫。」",
+    "「你能看到這句話，代表你已經進來太深了。」"
+  ];
 
-    input.addEventListener('keydown', function(event) {
-      if (event.key === 'Enter') {
-        const cmd = input.value.trim().toLowerCase();
-        contentDiv.innerHTML += `\nuser@h4ck3r:~$ ${cmd}`;
-        handleCommand(cmd);
-        input.value = '';
-        window.scrollTo(0, document.body.scrollHeight);
-      }
-    });
+  const quizQuestions = [
+    {
+      q: "Q1：哪一個 port 是 HTTPS 常用的？",
+      a: "443"
+    },
+    {
+      q: "Q2：資安中 CTF 是什麼意思？",
+      a: "capture the flag"
+    },
+    {
+      q: "Q3：SQL Injection 是屬於什麼類型攻擊？",
+      a: "資料庫"
+    }
+  ];
 
-    function handleCommand(cmd) {
-      if (cmd === 'help') {
-        contentDiv.innerHTML += `
+  let index = 0;
+  let currentQuiz = -1;
+
+  function typeNextChar() {
+    if (index < contentText.length) {
+      contentDiv.textContent += contentText[index++];
+      setTimeout(typeNextChar, 20);
+    }
+  }
+
+  typeNextChar();
+
+  input.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      const cmd = input.value.trim().toLowerCase();
+      contentDiv.innerHTML += `\nuser@h4ck3r:~$ ${cmd}`;
+      handleCommand(cmd);
+      input.value = '';
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  });
+
+  function handleCommand(cmd) {
+    if (cmd === 'help') {
+      contentDiv.innerHTML += `
 cat <檔名>     ：查看檔案內容
 ls             ：列出所有目錄
 scan           ：模擬系統掃描
+quiz           ：資安小問答
 clear          ：清除畫面
 exit           ：離開模擬器
-back           ：返回上一頁`;
-      } else if (cmd === 'ls') {
-        contentDiv.innerHTML += `\n資安班.txt\nflag.txt\nourphotos`;
-      } else if (cmd.startsWith("cat ")) {
-        const file = cmd.slice(4);
-        if (files[file]) {
-          contentDiv.innerHTML += `\n${files[file].content}`;
-          if (files[file].redirectTo) {
-            setTimeout(() => {
-              window.location.href = files[file].redirectTo;
-            }, 1000);
-          }
-        } else {
-          contentDiv.innerHTML += `\n找不到檔案：${file}`;
+back           ：返回上一頁
+hack           ：啟動駭客模式
+whoami         ：顯示使用者身份
+matrix         ：神秘彩蛋`;
+    } else if (cmd === 'ls') {
+      contentDiv.innerHTML += `\n資安班.txt\nflag.txt\nourphotos`;
+    } else if (cmd.startsWith("cat ")) {
+      const file = cmd.slice(4);
+      if (files[file]) {
+        contentDiv.innerHTML += `\n${files[file].content}`;
+        if (files[file].redirectTo) {
+          setTimeout(() => {
+            window.location.href = files[file].redirectTo;
+          }, 1000);
         }
-      } else if (cmd === 'scan') {
-        runScanAnimation();
-      } else if (cmd === 'clear') {
-        contentDiv.innerHTML = '';
-      } else if (cmd === 'exit') {
-        contentDiv.innerHTML += `\n再見！`;
-        input.disabled = true;
-      } else if (cmd === 'back') {
-        contentDiv.innerHTML += `\n返回上一頁中...`;
-        setTimeout(() => {
-          window.location.href = 'terminal.html';
-        }, 1000);
-      
       } else {
-        contentDiv.innerHTML += `\n未知指令：${cmd}`;
+        contentDiv.innerHTML += `\n找不到檔案：${file}`;
       }
-    }
-
-    function runScanAnimation() {
-      const scanLines = [
-        "啟動掃描程式...",
-        "掃描中 [▓░░░░░░░░░] 10%",
-        "掃描中 [▓▓▓░░░░░░░░] 30%",
-        "掃描中 [▓▓▓▓▓░░░░░░] 50%",
-        "掃描中 [▓▓▓▓▓▓▓░░░░] 70%",
-        "掃描中 [▓▓▓▓▓▓▓▓▓░░] 90%",
-        "掃描中 [▓▓▓▓▓▓▓▓▓▓▓] 100%",
-        "掃描完成！",
-        "找到目標 IP：10.0.0.1",
-        "開放端口：22 (SSH)、80 (HTTP)、443 (HTTPS)"
-      ];
-
-      let i = 0;
-      function printLine() {
-        if (i < scanLines.length) {
-          contentDiv.innerHTML += `\n${scanLines[i++]}`;
-          setTimeout(printLine, 700);
+    } else if (cmd === 'scan') {
+      runScanAnimation();
+    } else if (cmd === 'clear') {
+      contentDiv.innerHTML = '';
+    } else if (cmd === 'exit') {
+      contentDiv.innerHTML += `\n再見！`;
+      input.disabled = true;
+    } else if (cmd === 'back') {
+      contentDiv.innerHTML += `\n返回上一頁中...`;
+      setTimeout(() => {
+        window.location.href = 'terminal.html';
+      }, 1000);
+    } else if (cmd === 'continue') {
+      contentDiv.innerHTML += `\n繼續前往下一頁...`;
+      setTimeout(() => {
+        window.location.href = 'next.html';
+      }, 1000);
+    } else if (cmd === 'whoami') {
+      contentDiv.innerHTML += `\n你是：h4ck3r 學員 - 資安精英培訓中`;
+    } else if (cmd === 'hack') {
+      contentDiv.innerHTML += `\n正在嘗試取得 root 權限...\nAccess granted.`;
+    } else if (cmd === 'matrix') {
+      window.open("https://www.youtube.com/watch?v=WnlwlVlgvz0", "_blank");
+      contentDiv.innerHTML += `\n進入矩陣中...`;
+    } else if (cmd === 'quiz') {
+      currentQuiz = 0;
+      askQuiz();
+    } else if (currentQuiz !== -1) {
+      if (cmd === quizQuestions[currentQuiz].a.toLowerCase()) {
+        contentDiv.innerHTML += `\n答對了！`;
+        currentQuiz++;
+        if (currentQuiz < quizQuestions.length) {
+          askQuiz();
+        } else {
+          contentDiv.innerHTML += `\n恭喜你完成所有問題！`;
+          currentQuiz = -1;
         }
+      } else {
+        contentDiv.innerHTML += `\n答錯囉，再想想看～`;
       }
-      printLine();
+    } else {
+      const quote = hackerQuotes[Math.floor(Math.random() * hackerQuotes.length)];
+      contentDiv.innerHTML += `\n未知指令：${cmd}\n💡 ${quote}`;
     }
+  }
 
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        history.back();
+  function askQuiz() {
+    contentDiv.innerHTML += `\n${quizQuestions[currentQuiz].q}`;
+  }
+
+  function runScanAnimation() {
+    const scanLines = [
+      "啟動掃描程式...",
+      "掃描中 [▓░░░░░░░░░] 10%",
+      "掃描中 [▓▓▓░░░░░░░░] 30%",
+      "掃描中 [▓▓▓▓▓░░░░░░] 50%",
+      "掃描中 [▓▓▓▓▓▓▓░░░░] 70%",
+      "掃描中 [▓▓▓▓▓▓▓▓▓░░] 90%",
+      "掃描中 [▓▓▓▓▓▓▓▓▓▓▓] 100%",
+      "掃描完成！",
+      "找到目標 IP：10.0.0.1",
+      "開放端口：22 (SSH)、80 (HTTP)、443 (HTTPS)",
+      "⚠️ 偵測到可疑流量來自外部節點..."
+    ];
+
+    let i = 0;
+    function printLine() {
+      if (i < scanLines.length) {
+        contentDiv.innerHTML += `\n${scanLines[i++]}`;
+        setTimeout(printLine, 700);
       }
-    });
-  </script>
+    }
+    printLine();
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      history.back();
+    }
+  });
+</script>
 </body>
 </html>
